@@ -1,56 +1,13 @@
+'use client'
+
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Calendar, Clock, ArrowRight, BookOpen } from 'lucide-react'
-import { supabase } from '../../lib/supabase'
-
-interface BlogPost {
-  id: string
-  title: string
-  excerpt: string
-  image: string
-  published_date: string
-  read_time: number
-  category: string
-  slug: string
-}
+import { blogApi, type BlogPost } from '@/lib/supabase'
 
 const Blog: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
-
-  // Mock data for demo - replace with Supabase data
-  const mockPosts: BlogPost[] = [
-    {
-      id: '1',
-      title: 'Building Modern React Applications with TypeScript',
-      excerpt: 'Learn how to leverage TypeScript in React applications for better type safety, improved developer experience, and maintainable code.',
-      image: 'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=600',
-      published_date: '2024-01-15',
-      read_time: 8,
-      category: 'React',
-      slug: 'building-modern-react-applications-typescript'
-    },
-    {
-      id: '2',
-      title: 'Mastering CSS Grid and Flexbox in 2024',
-      excerpt: 'A comprehensive guide to modern CSS layout techniques. Understand when to use Grid vs Flexbox and how to create responsive layouts.',
-      image: 'https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=600',
-      published_date: '2024-01-10',
-      read_time: 6,
-      category: 'CSS',
-      slug: 'mastering-css-grid-flexbox-2024'
-    },
-    {
-      id: '3',
-      title: 'State Management in React: Redux vs Context API',
-      excerpt: 'Compare different state management solutions in React and learn when to use each approach for optimal application architecture.',
-      image: 'https://images.pexels.com/photos/574071/pexels-photo-574071.jpeg?auto=compress&cs=tinysrgb&w=600',
-      published_date: '2024-01-05',
-      read_time: 12,
-      category: 'React',
-      slug: 'state-management-react-redux-context-api'
-    }
-  ]
 
   useEffect(() => {
     fetchPosts()
@@ -58,22 +15,11 @@ const Blog: React.FC = () => {
 
   const fetchPosts = async () => {
     try {
-      // For demo, we'll use mock data
-      // In production, uncomment the Supabase query below
-      
-      // const { data, error } = await supabase
-      //   .from('blog_posts')
-      //   .select('*')
-      //   .eq('published', true)
-      //   .order('published_date', { ascending: false })
-      //   .limit(3)
-      
-      // if (error) throw error
-      
-      setPosts(mockPosts)
-      setLoading(false)
+      const data = await blogApi.getPublished(3)
+      setPosts(data)
     } catch (error) {
       console.error('Error fetching blog posts:', error)
+    } finally {
       setLoading(false)
     }
   }

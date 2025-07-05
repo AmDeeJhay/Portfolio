@@ -1,19 +1,9 @@
+'use client'
+
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ExternalLink, Github, Filter } from 'lucide-react'
-import { supabase } from '../../lib/supabase'
-
-interface Project {
-  id: string
-  title: string
-  description: string
-  image: string
-  tech_stack: string[]
-  category: string
-  demo_url?: string
-  github_url?: string
-  featured: boolean
-}
+import { ExternalLink, Github } from 'lucide-react'
+import { projectsApi, type Project } from '@/lib/supabase'
 
 const Projects: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([])
@@ -22,97 +12,18 @@ const Projects: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // Mock data for demo - replace with Supabase data
-  const mockProjects: Project[] = [
-    {
-      id: '1',
-      title: 'E-Commerce Platform',
-      description: 'A full-featured e-commerce platform with React, TypeScript, and Stripe integration. Features include user authentication, product catalog, shopping cart, and payment processing.',
-      image: 'https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=600',
-      tech_stack: ['React', 'TypeScript', 'Tailwind CSS', 'Stripe', 'Firebase'],
-      category: 'web',
-      demo_url: 'https://demo.example.com',
-      github_url: 'https://github.com/example',
-      featured: true
-    },
-    {
-      id: '2',
-      title: 'Task Management App',
-      description: 'A collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features.',
-      image: 'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=600',
-      tech_stack: ['React', 'Node.js', 'Socket.io', 'MongoDB'],
-      category: 'web',
-      demo_url: 'https://demo.example.com',
-      github_url: 'https://github.com/example',
-      featured: true
-    },
-    {
-      id: '3',
-      title: 'Weather Dashboard',
-      description: 'A beautiful weather dashboard with location-based forecasts, interactive maps, and weather alerts.',
-      image: 'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=600',
-      tech_stack: ['React', 'OpenWeather API', 'Chart.js'],
-      category: 'web',
-      demo_url: 'https://demo.example.com',
-      github_url: 'https://github.com/example',
-      featured: false
-    },
-    {
-      id: '4',
-      title: 'Mobile Banking App',
-      description: 'A secure mobile banking application with biometric authentication, transaction history, and financial analytics.',
-      image: 'https://images.pexels.com/photos/4968631/pexels-photo-4968631.jpeg?auto=compress&cs=tinysrgb&w=600',
-      tech_stack: ['React Native', 'Firebase', 'Biometric Auth'],
-      category: 'mobile',
-      demo_url: 'https://demo.example.com',
-      github_url: 'https://github.com/example',
-      featured: true
-    },
-    {
-      id: '5',
-      title: 'Portfolio Website',
-      description: 'A modern, responsive portfolio website built with React and Framer Motion, featuring smooth animations and dark mode.',
-      image: 'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=600',
-      tech_stack: ['React', 'Framer Motion', 'Tailwind CSS'],
-      category: 'web',
-      demo_url: 'https://demo.example.com',
-      github_url: 'https://github.com/example',
-      featured: false
-    },
-    {
-      id: '6',
-      title: 'AI Chat Interface',
-      description: 'An intelligent chat interface with natural language processing, sentiment analysis, and conversational AI capabilities.',
-      image: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=600',
-      tech_stack: ['React', 'OpenAI API', 'WebSocket'],
-      category: 'ai',
-      demo_url: 'https://demo.example.com',
-      github_url: 'https://github.com/example',
-      featured: true
-    }
-  ]
-
   useEffect(() => {
     fetchProjects()
   }, [])
 
   const fetchProjects = async () => {
     try {
-      // For demo, we'll use mock data
-      // In production, uncomment the Supabase query below
-      
-      // const { data, error } = await supabase
-      //   .from('projects')
-      //   .select('*')
-      //   .order('created_at', { ascending: false })
-      
-      // if (error) throw error
-      
-      setProjects(mockProjects)
-      setFilteredProjects(mockProjects)
-      setLoading(false)
+      const data = await projectsApi.getAll()
+      setProjects(data)
+      setFilteredProjects(data)
     } catch (error) {
       console.error('Error fetching projects:', error)
+    } finally {
       setLoading(false)
     }
   }
@@ -193,7 +104,7 @@ const Projects: React.FC = () => {
             {filteredProjects.map((project, index) => (
               <motion.div
                 key={project.id}
-                className="bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                className="bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}

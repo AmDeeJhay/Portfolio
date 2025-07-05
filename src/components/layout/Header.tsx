@@ -1,7 +1,9 @@
+'use client'
+
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Sun, Moon } from 'lucide-react'
-import { useTheme } from '../../contexts/ThemeContext'
+import { useTheme } from '@/contexts/ThemeContext'
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)

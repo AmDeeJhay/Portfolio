@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Github, Linkedin, Twitter, Mail, Heart, Code } from 'lucide-react'
@@ -38,7 +40,7 @@ const Footer: React.FC = () => {
   ]
 
   const techStack = [
-    'React', 'TypeScript', 'Next.js', 'Tailwind CSS', 'Framer Motion', 'Supabase'
+    'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Supabase'
   ]
 
   return (

@@ -1,8 +1,10 @@
+'use client'
+
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, Copy, Check } from 'lucide-react'
-import { supabase } from '../../lib/supabase'
+import { contactApi } from '@/lib/supabase'
 
 interface ContactFormData {
   name: string
@@ -20,26 +22,7 @@ const Contact: React.FC = () => {
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true)
     try {
-      // For demo, we'll just simulate form submission
-      // In production, uncomment the Supabase code below
-      
-      // const { error } = await supabase
-      //   .from('contact_messages')
-      //   .insert([
-      //     {
-      //       name: data.name,
-      //       email: data.email,
-      //       subject: data.subject,
-      //       message: data.message,
-      //       created_at: new Date().toISOString()
-      //     }
-      //   ])
-      
-      // if (error) throw error
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
+      await contactApi.sendMessage(data)
       setIsSubmitted(true)
       reset()
       

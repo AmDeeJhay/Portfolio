@@ -1,3 +1,5 @@
+'use client'
+
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 type Theme = 'dark' | 'light'
@@ -18,18 +20,32 @@ export const useTheme = () => {
 }
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>(() => {
-    const saved = localStorage.getItem('theme') as Theme
-    return saved || 'light'
-  })
+  const [theme, setTheme] = useState<Theme>('light')
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    localStorage.setItem('theme', theme)
-    document.documentElement.classList.toggle('dark', theme === 'dark')
-  }, [theme])
+    const saved = localStorage.getItem('theme') as Theme
+    if (saved) {
+      setTheme(saved)
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setTheme('dark')
+    }
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem('theme', theme)
+      document.documentElement.classList.toggle('dark', theme === 'dark')
+    }
+  }, [theme, mounted])
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark')
+  }
+
+  if (!mounted) {
+    return <div className="min-h-screen bg-white" />
   }
 
   return (

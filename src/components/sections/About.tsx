@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Code, Users, Award, Coffee } from 'lucide-react'
@@ -114,7 +116,7 @@ const About: React.FC = () => {
                 Current Tech Stack
               </h3>
               <div className="flex flex-wrap gap-2">
-                {['React', 'TypeScript', 'Next.js', 'Tailwind CSS', 'Node.js', 'Firebase', 'AWS'].map((tech) => (
+                {['React', 'TypeScript', 'Next.js', 'Tailwind CSS', 'Node.js', 'Supabase', 'AWS'].map((tech) => (
                   <span
                     key={tech}
                     className="px-3 py-1 bg-blue-600 text-white rounded-full text-sm font-medium"
